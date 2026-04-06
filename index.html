@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>සිංහල යතුරුපුවරු පුහුණුව | Sinhala Keyboard Hero - Zero to Hero</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* better focus for typing */
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a472a 0%, #0e2a1a 100%);
+            font-family: 'Segoe UI', 'Noto Sans Sinhala', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* main game container */
+        .game-container {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255,248,225,0.95);
+            border-radius: 68px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,200,0.6);
+            overflow: hidden;
+            backdrop-filter: blur(1px);
+            transition: all 0.2s;
+        }
+
+        /* header area */
+        .game-header {
+            background: #ffc857;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 6px solid #d49b3a;
+            gap: 15px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 1.9rem;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #2c5e2e, #0b3b1a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+        }
+        .title p {
+            margin: 5px 0 0;
+            font-weight: bold;
+            color: #3b2a1f;
+        }
+
+        .stats {
+            background: #2d2f2b;
+            padding: 8px 20px;
+            border-radius: 60px;
+            color: #ffeaac;
+            font-weight: bold;
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stats span {
+            color: #ffd966;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-left: 8px;
+        }
+
+        /* level progress */
+        .level-progress {
+            background: #e9e3d5;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #ccbc9a;
+        }
+        .level-badge {
+            background: #3c2e24;
+            padding: 6px 20px;
+            border-radius: 50px;
+            color: #ffdd99;
+            font-weight: bold;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 14px;
+            background: #cbbf9a;
+            border-radius: 40px;
+            overflow: hidden;
+            min-width: 180px;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #f5a623;
+            border-radius: 40px;
+            transition: width 0.2s ease;
+        }
+
+        /* main typing area */
+        .typing-arena {
+            padding: 35px 25px 30px;
+            text-align: center;
+        }
+
+        .target-word {
+            background: #fff3e0;
+            border-radius: 70px;
+            padding: 35px 20px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 0 3px white, 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .sinhala-display {
+            font-size: 5.3rem;
+            font-weight: bold;
+            font-family: 'Noto Sans Sinhala', 'Segoe UI', 'Iskoola Pota', sans-serif;
+            letter-spacing: 8px;
+            word-break: break-word;
+            color: #2c4b2c;
+            text-shadow: 2px 2px 0 #cdb38c;
+        }
+
+        .instruction {
+            font-size: 1.2rem;
+            color: #b47c2e;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .input-area {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 2.1rem;
+            font-family: 'Noto Sans Sinhala', 'Segoe UI', monospace;
+            text-align: center;
+            background: #fef7e8;
+            border: 4px solid #ddb86a;
+            border-radius: 80px;
+            outline: none;
+            transition: 0.1s;
+            color: #1e3a1e;
+            letter-spacing: 1px;
+        }
+
+        #userInput:focus {
+            border-color: #f39c12;
+            box-shadow: 0 0 0 4px rgba(243,156,18,0.3);
+            background: #ffffff;
+        }
+
+        .feedback {
+            margin-top: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 70px;
+        }
+
+        .next-hint {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #7f6b42;
+        }
+
+        /* keyboard hint grid */
+        .keyboard-hint {
+            background: #1f2a1b;
+            padding: 20px 15px;
+            border-top: 4px solid #e2b13b;
+            color: #f2e3c2;
+        }
+        .hint-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .key-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .key-card {
+            background: #2c2e24;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 3px solid #f5b042;
+            color: #ffdd99;
+            transition: 0.05s linear;
+        }
+        .key-card.active-key {
+            background: #f5a623;
+            color: #1f2a1b;
+            transform: scale(0.96);
+            border-bottom-color: #c97e0a;
+        }
+
+        button {
+            background: #dba551;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 8px;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #2e241a;
+        }
+        button:hover {
+            background: #c4893a;
+            transform: scale(0.97);
+        }
+        .reset-btn {
+            background: #7e5a3a;
+            color: white;
+        }
+
+        @media (max-width: 650px) {
+            .sinhala-display { font-size: 3rem; }
+            #userInput { font-size: 1.5rem; padding: 15px; }
+            .stats span { font-size: 1.2rem; }
+        }
+
+        .success-feedback {
+            color: #2a7221;
+            text-shadow: 0 0 3px #bbffaa;
+        }
+        .error-feedback {
+            color: #b13e3e;
+        }
+        footer {
+            background: #e9dbc5;
+            text-align: center;
+            padding: 12px;
+            font-size: 0.8rem;
+            color: #6b4c2c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="game-header">
+        <div class="title">
+            <h1>⌨️ සිංහල යතුරුපුවරු වීරයා</h1>
+            <p>Sinhala Keyboard Hero • Zero ➜ Hero</p>
+        </div>
+        <div class="stats">
+            <div>🎯 වාරය: <span id="scoreCount">0</span> / <span id="totalNeeded">5</span></div>
+            <div>⭐ මට්ටම: <span id="levelNum">1</span></div>
+            <div>🏆 නිවැරදි: <span id="correctStreak">0</span></div>
+        </div>
+    </div>
+
+    <div class="level-progress">
+        <div class="level-badge">📖 පාඩම් මට්ටම <span id="levelName">පිළිවෙලට යතුරු</span></div>
+        <div class="progress-bar-bg"><div class="progress-fill" id="levelProgressFill"></div></div>
+        <button id="resetGameBtn" class="reset-btn">🔄 නැවත පටන්ගන්න</button>
+    </div>
+
+    <div class="typing-arena">
+        <div class="target-word">
+            <div class="sinhala-display" id="currentWordDisplay">ආයුබෝවන්</div>
+            <div class="instruction">✍️ පහත කොටුවේ ටයිප් කරන්න</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" autocomplete="off" autofocus placeholder="මෙහි ටයිප් කරන්න...">
+        </div>
+        <div class="feedback" id="feedbackMsg"></div>
+        <div class="next-hint" id="nextHint">✅ නිවැරදිව ටයිප් කර මීළඟ වචනයට යන්න</div>
+    </div>
+
+    <div class="keyboard-hint">
+        <div class="hint-title">⌨️ වත්මන් ඉලක්කය සඳහා යතුරු උපකාරය (Sinhala layout මතකය)</div>
+        <div id="keyHintContainer" class="key-grid"></div>
+    </div>
+    <footer>
+        💡 ඉඟිය: සිංහල යුනිකේත ටයිප් කිරීමට ඔබගේ යතුරුපුවරුව සිංහලට මාරු කරන්න. මෙම ක්‍රීඩාව මට්ටමෙන් මට්ටමට දක්ෂතාව වැඩි කරයි.
+    </footer>
+</div>
+
+<script>
+    // ----------------------------------------------
+    // LEVEL DATA : Zero to Hero Sinhala typing practice
+    // Levels: each level has target words array, required correct count to advance
+    // From basic single letters/combos to full sentences.
+    // ----------------------------------------------
+    const LEVELS = [
+        {   // Level 0 (index0)
+            name: "🌱 පිළිවෙලට ස්වර & පිලි",
+            requiredCorrect: 5,
+            words: ["අ", "ආ", "ඉ", "ඊ", "උ", "ඌ", "එ", "ඒ", "ඔ", "ඕ"]
+        },
+        {   // Level 1
+            name: "🍃 ක, ග, ත්‍යාංග (මූලික ව්‍යාංජන)",
+            requiredCorrect: 5,
+            words: ["ක", "ග", "ත", "ද", "ප", "බ", "ම", "ය", "ර", "ල"]
+        },
+        {   // Level 2 - simple words
+            name: "🌸 සරල වචන (2-3 අකුරු)",
+            requiredCorrect: 5,
+            words: ["කම", "ගෙදර", "පොත", "මල", "යාළු", "රට", "දෙන", "බස්", "කිරි", "වතුර"]
+        },
+        {   // Level 3 - medium difficulty with combined letters
+            name: "🌿 මිශ්‍ර අකුරු & දිග වචන",
+            requiredCorrect: 5,
+            words: ["ශ්‍රී", "ප්‍රේම", "ග්‍රාම", "ස්වර්ණ", "ජ්‍යෝති", "භාෂාව", "සංස්කෘත", "විද්‍යාව", "සෞඛ්‍ය", "ප්‍රඥා"]
+        },
+        {   // Level 4 - common phrases
+            name: "🔥 වාක්‍ය ඛණ්ඩ (hero step)",
+            requiredCorrect: 5,
+            words: ["ආයුබෝවන්", "ස්තුතියි", "කොහොමද", "සුබ උදෑසනක්", "නමස්කාර", "සුබ රාත්‍රියක්", "මට තේරෙනවා", "යන්න එන්න", "සතුටුයි", "ආපසු හමුවෙමු"]
+        },
+        {   // Level 5 - advanced & long words + common idioms (Hero)
+            name: "🏆 හීරෝ මට්ටම (සම්පූර්ණ ප්‍රවීණ)",
+            requiredCorrect: 5,
+            words: ["විශ්වවිද්‍යාලය", "පරිගණකය", "කාර්මික", "සමාජ මාධ්‍ය", "අන්තර්ජාතික", "ප්‍රජාතන්ත්‍රවාදී", "ස්වාධීනත්වය", "පරිසර හිතකාමී", "විකාශනය", "අභියෝගාත්මක"]
+        }
+    ];
+
+    // Game state
+    let currentLevelIdx = 0;            // 0-indexed
+    let currentWordIndex = 0;
+    let wordsForCurrentLevel = [];
+    let requiredCorrectForLevel = 5;
+    let correctInCurrentLevel = 0;      // how many words correctly typed in this level (resets on level up)
+    let currentTargetWord = "";
+    let waitingForNext = false;          // after correct, wait before loading next word? (auto load after 0.5s)
+    let streak = 0;                      // consecutive correct overall? for fun but not essential
+    let nextWordTimeout = null;
+    let levelCompletedFlag = false;
+    
+    // DOM elements
+    const scoreCountSpan = document.getElementById("scoreCount");
+    const totalNeededSpan = document.getElementById("totalNeeded");
+    const levelNumSpan = document.getElementById("levelNum");
+    const correctStreakSpan = document.getElementById("correctStreak");
+    const levelNameSpan = document.getElementById("levelName");
+    const progressFillDiv = document.getElementById("levelProgressFill");
+    const currentWordDisplay = document.getElementById("currentWordDisplay");
+    const userInput = document.getElementById("userInput");
+    const feedbackMsgDiv = document.getElementById("feedbackMsg");
+    const nextHintSpan = document.getElementById("nextHint");
+    const keyHintContainer = document.getElementById("keyHintContainer");
+    const resetGameBtn = document.getElementById("resetGameBtn");
+    
+    // Helper: load current level data
+    function loadLevelData() {
+        const level = LEVELS[currentLevelIdx];
+        levelNameSpan.innerText = level.name;
+        wordsForCurrentLevel = [...level.words];
+        requiredCorrectForLevel = level.requiredCorrect;
+        totalNeededSpan.innerText = requiredCorrectForLevel;
+        // reset progress within level? Only when entering new level, we keep correctInCurrentLevel? 
+        // But when level changes due to completing, we reset correctInCurrentLevel.
+        // If we manually reset game, we reset everything.
+        // If we level up, we already set correctInCurrentLevel=0 and currentWordIndex=0.
+        updateProgressUI();
+        // pick first word
+        currentWordIndex = 0;
+        if(wordsForCurrentLevel.length > 0) {
+            setNewWord(wordsForCurrentLevel[0]);
+        } else {
+            setNewWord("ERROR");
+        }
+        updateKeyboardHint(currentTargetWord);
+    }
+    
+    // set target word and reset input field, clear feedback
+    function setNewWord(word) {
+        if(nextWordTimeout) clearTimeout(nextWordTimeout);
+        waitingForNext = false;
+        currentTargetWord = word;
+        currentWordDisplay.innerText = word;
+        userInput.value = "";
+        feedbackMsgDiv.innerHTML = "";
+        nextHintSpan.innerHTML = "⌨️ වචනය ටයිප් කර Enter ඔබන්න හෝ ඉහත කොටුවේ ටයිප් කරන්න";
+        // remove any error styles
+        userInput.style.borderColor = "#ddb86a";
+        updateKeyboardHint(word);
+        // focus input
+        userInput.focus();
+    }
+    
+    // update level progress bar and score display
+    function updateProgressUI() {
+        scoreCountSpan.innerText = correctInCurrentLevel;
+        levelNumSpan.innerText = currentLevelIdx + 1;
+        const percent = (correctInCurrentLevel / requiredCorrectForLevel) * 100;
+        progressFillDiv.style.width = Math.min(100, percent) + "%";
+        // check if level completed (external call might be after increment)
+        if(correctInCurrentLevel >= requiredCorrectForLevel && !levelCompletedFlag) {
+            levelCompletedFlag = true;
+            handleLevelComplete();
+        }
+    }
+    
+    // level complete -> go to next level or show victory
+    function handleLevelComplete() {
+        if(nextWordTimeout) clearTimeout(nextWordTimeout);
+        waitingForNext = true;
+        if(currentLevelIdx + 1 < LEVELS.length) {
+            // advance to next level
+            feedbackMsgDiv.innerHTML = "🎉✨ මට්ටම සම්පූර්ණයි! ඊළඟ මට්ටමට යමින්... ✨🎉";
+            feedbackMsgDiv.style.color = "#2c6e2c";
+            nextHintSpan.innerHTML = "🌟 නව මට්ටමක්! අලුත් වචන සඳහා සූදානම් වන්න! 🌟";
+            currentLevelIdx++;
+            correctInCurrentLevel = 0;
+            levelCompletedFlag = false;
+            loadLevelData();   // reloads words & resets word pointer
+            updateProgressUI();
+            waitingForNext = false;
+        } else {
+            // VICTORY: all levels mastered
+            feedbackMsgDiv.innerHTML = "🏆🏆🏆 ප්‍රශංසා වේ! ඔබ සිංහල යතුරුපුවරු වීරයෙකි! HERO සම්මානය හිමි විය! 🏆🏆🏆";
+            feedbackMsgDiv.style.color = "#b97318";
+            nextHintSpan.innerHTML = "🎉 ඔබ සියලු මට්ටම් සම්පූර්ණ කළා! නැවත ආරම්භ කිරීමට reset බොත්තම ඔබන්න.";
+            waitingForNext = true;
+            userInput.disabled = true;
+            userInput.placeholder = "සුපිරි! ඔබ දැන් හීරෝ කෙනෙක්!";
+            return;
+        }
+        userInput.disabled = false;
+        userInput.placeholder = "මෙහි ටයිප් කරන්න...";
+        userInput.focus();
+    }
+    
+    // check typing correctness
+    function checkAnswer() {
+        if(waitingForNext) {
+            feedbackMsgDiv.innerHTML = "⏳ කරුණාකර ඉන්න, මීළඟ වචනය පූරණය වෙමින්...";
+            return;
+        }
+        if(levelCompletedFlag && currentLevelIdx >= LEVELS.length-1 && correctInCurrentLevel >= requiredCorrectForLevel) {
+            // final level completed already locked.
+            feedbackMsgDiv.innerHTML = "ඔබ දැනටමත් හීරෝ! Reset කරන්න.";
+            return;
+        }
+        const typed = userInput.value.trim();
+        if(typed === "") {
+            feedbackMsgDiv.innerHTML = "⚠️ කරුණාකර යමක් ටයිප් කරන්න!";
+            feedbackMsgDiv.className = "feedback error-feedback";
+            return;
+        }
+        
+        if(typed === currentTargetWord) {
+            // CORRECT!
+            feedbackMsgDiv.innerHTML = "✔️ නිවැරදියි! සුපිරි! +1 ✔️";
+            feedbackMsgDiv.className = "feedback success-feedback";
+            userInput.style.borderColor = "#2ecc71";
+            streak++;
+            correctStreakSpan.innerText = streak;
+            
+            // increase correct count for level
+            correctInCurrentLevel++;
+            updateProgressUI();
+            
+            // if after increment level completed, handleLevelComplete will be triggered via updateProgressUI (flag)
+            if(correctInCurrentLevel < requiredCorrectForLevel) {
+                // move to next word in same level
+                moveToNextWordInLevel();
+            } else {
+                // level completion already triggered in updateProgressUI -> handleLevelComplete called
+                // but we need to avoid double moving if handleLevelComplete reloads level
+                if(!(currentLevelIdx+1 >= LEVELS.length && correctInCurrentLevel >= requiredCorrectForLevel)) {
+                    // if not final complete, but level just completed, we do nothing extra cause handleLevelComplete will call loadLevelData.
+                    // but we must avoid setting next word again. So just set waiting indicator and let handleLevelComplete handle.
+                }
+                // For final victory, handleLevelComplete disables input
+            }
+        } else {
+            // wrong answer
+            feedbackMsgDiv.innerHTML = `❌ වැරදියි! " ${currentTargetWord} " ලෙස ටයිප් කළ යුතුයි. නැවත උත්සාහ කරන්න. ❌`;
+            feedbackMsgDiv.className = "feedback error-feedback";
+            userInput.style.borderColor = "#e67e22";
+            streak = 0;
+            correctStreakSpan.innerText = streak;
+            // shake effect subtle
+            userInput.style.transform = "shake 0.1s";
+            setTimeout(() => { if(userInput) userInput.style.transform = ""; }, 200);
+            userInput.focus();
+            userInput.select();
+        }
+        // clear any timeout for auto resetting border after a short time
+        setTimeout(() => {
+            if(userInput && !waitingForNext) userInput.style.borderColor = "#ddb86a";
+        }, 800);
+    }
+    
+    // load next word in current level (without incrementing level)
+    function moveToNextWordInLevel() {
+        if(waitingForNext) return;
+        waitingForNext = true;
+        nextWordTimeout = setTimeout(() => {
+            // determine next word index (cyclic or sequential but we will go sequential, reset after finishing list)
+            let nextIdx = currentWordIndex + 1;
+            if(nextIdx >= wordsForCurrentLevel.length) {
+                // shuffle or repeat from start: we just rotate to keep practice
+                nextIdx = 0;
+            }
+            currentWordIndex = nextIdx;
+            const nextWord = wordsForCurrentLevel[currentWordIndex];
+            setNewWord(nextWord);
+            waitingForNext = false;
+            feedbackMsgDiv.innerHTML = "✨ ඊළඟ වචනය! දිගටම ටයිප් කරන්න ✨";
+            feedbackMsgDiv.className = "feedback";
+            userInput.focus();
+            if(nextWordTimeout) clearTimeout(nextWordTimeout);
+            nextWordTimeout = null;
+        }, 450);
+    }
+    
+    // dynamic keyboard hint: show unique characters in target word (Sinhala)
+    function updateKeyboardHint(word) {
+        if(!word) return;
+        // get unique characters (sinhala unicode characters)
+        const chars = [...new Set(word.split(""))];
+        // filter only Sinhala ranges? but fine, show them
+        const hintChars = chars.slice(0, 12); // max 12 keys
+        keyHintContainer.innerHTML = "";
+        hintChars.forEach(ch => {
+            const keyDiv = document.createElement("div");
+            keyDiv.className = "key-card";
+            keyDiv.innerText = ch;
+            keyHintContainer.appendChild(keyDiv);
+        });
+        if(hintChars.length === 0) keyHintContainer.innerHTML = "<span style='color:#bba87a'>↪️ ඉහත වචනයේ අකුරු</span>";
+    }
+    
+    // full game reset
+    function fullReset() {
+        if(nextWordTimeout) clearTimeout(nextWordTimeout);
+        currentLevelIdx = 0;
+        correctInCurrentLevel = 0;
+        streak = 0;
+        correctStreakSpan.innerText = streak;
+        levelCompletedFlag = false;
+        waitingForNext = false;
+        userInput.disabled = false;
+        userInput.placeholder = "මෙහි ටයිප් කරන්න...";
+        loadLevelData();   // reloads level0 data and sets word
+        updateProgressUI();
+        feedbackMsgDiv.innerHTML = "🔄 ක්‍රීඩාව නැවත ආරම්භ කරන ලදී. මට්ටම 1 සිට ආරම්භ කරන්න!";
+        feedbackMsgDiv.className = "feedback";
+        userInput.focus();
+        userInput.style.borderColor = "#ddb86a";
+    }
+    
+    // event listeners
+    userInput.addEventListener("keypress", (e) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            if(!waitingForNext) {
+                checkAnswer();
+            } else {
+                feedbackMsgDiv.innerHTML = "⏳ කරුණාකර මද වේලාවක් රැඳී සිටින්න...";
+            }
+        }
+    });
+    
+    resetGameBtn.addEventListener("click", () => {
+        fullReset();
+    });
+    
+    // optional click on word to refocus
+    currentWordDisplay.addEventListener("click", () => {
+        userInput.focus();
+    });
+    
+    // initialize
+    function init() {
+        fullReset(); // sets everything up
+    }
+    
+    init();
+</script>
+</body>
+</html>
