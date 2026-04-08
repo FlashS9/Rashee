@@ -15,17 +15,28 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  background: url('https://images.unsplash.com/photo-1526401485004-2fda9f3b0b5a?auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
 }
 .enemy {
   position: absolute;
   color: red;
   font-size: 20px;
 }
-#score {
+#score, #missed {
   position: absolute;
   top: 10px;
-  left: 10px;
   font-size: 18px;
+}
+#score { left: 10px; }
+#missed { right: 10px; }
+#controls {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+}
+button {
+  margin-right: 5px;
+  padding: 5px 10px;
 }
 #inputBox {
   position: absolute;
@@ -36,21 +47,41 @@ body {
   padding: 10px;
   font-size: 18px;
 }
+.wish {
+  position: absolute;
+  color: gold;
+  font-size: 40px;
+  animation: floatUp 2s ease-out forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-100px); }
+}
 </style>
 </head>
 <body>
 <div id="game">
   <div id="score">Score: 0</div>
+  <div id="missed">Missed: 0 / 5</div>
+  <div id="controls">
+    <button onclick="startGame()">Play</button>
+    <button onclick="pauseGame()">Pause</button>
+    <button onclick="stopGame()">Stop</button>
+  </div>
 </div>
 <input id="inputBox" placeholder="Type to shoot..." autofocus />
 
 <script>
-const words = ["attack","defend","laser","enemy","code","javascript","speed","focus","target","fire"];
+const words = ["attack","defend","laser","enemy","code","javascript","speed","focus","target","fire","credit","department","General","Tech"];
 let enemies = [];
 let score = 0;
+let missed = 0;
+let running = false;
+let spawnInterval, updateInterval;
 
 function spawnEnemy() {
-  const word = words[Math.floor(Math.random() * words.length)];
+  if (!running) return;
+  const word = Math.random() < 0.1 ? "wish" : words[Math.floor(Math.random() * words.length)];
   const el = document.createElement("div");
   el.classList.add("enemy");
   el.textContent = word;
@@ -62,6 +93,7 @@ function spawnEnemy() {
 }
 
 function updateEnemies() {
+  if (!running) return;
   enemies.forEach((enemy, index) => {
     enemy.y += 0.5;
     enemy.el.style.top = enemy.y + "px";
@@ -69,6 +101,12 @@ function updateEnemies() {
     if (enemy.y > window.innerHeight) {
       enemy.el.remove();
       enemies.splice(index, 1);
+      missed++;
+      document.getElementById("missed").textContent = "Missed: " + missed + " / 5";
+      if (missed >= 5) {
+        alert("Game Over!");
+        stopGame();
+      }
     }
   });
 }
@@ -78,14 +116,52 @@ function shoot(word) {
     if (enemy.word === word) {
       enemy.el.remove();
       enemies.splice(index, 1);
-      score += 10;
+
+      if (word === "wish") {
+        score += 1000;
+        showWishAnimation();
+      } else {
+        score += 10;
+      }
+
       document.getElementById("score").textContent = "Score: " + score;
     }
   });
 }
 
-setInterval(spawnEnemy, 1500);
-setInterval(updateEnemies, 20);
+function showWishAnimation() {
+  const wish = document.createElement("div");
+  wish.classList.add("wish");
+  wish.textContent = "+1000 ✨";
+  wish.style.left = "50%";
+  wish.style.top = "50%";
+  document.getElementById("game").appendChild(wish);
+
+  setTimeout(() => wish.remove(), 2000);
+}
+
+function startGame() {
+  if (running) return;
+  running = true;
+  spawnInterval = setInterval(spawnEnemy, 1500);
+  updateInterval = setInterval(updateEnemies, 20);
+}
+
+function pauseGame() {
+  running = false;
+}
+
+function stopGame() {
+  running = false;
+  clearInterval(spawnInterval);
+  clearInterval(updateInterval);
+  enemies.forEach(e => e.el.remove());
+  enemies = [];
+  score = 0;
+  missed = 0;
+  document.getElementById("score").textContent = "Score: 0";
+  document.getElementById("missed").textContent = "Missed: 0 / 5";
+}
 
 const input = document.getElementById("inputBox");
 input.addEventListener("keydown", (e) => {
