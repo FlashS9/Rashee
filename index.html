@@ -1,175 +1,707 @@
+Here is an HTML document that creates a computer shop invoice system with a background image, welcome bar, item selection, and print functionality.
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Typing Shooter Game</title>
-<style>
-body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  color: white;
-  font-family: monospace;
-}
-#game {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background: url('https://static.vecteezy.com/system/resources/thumbnails/021/249/965/small_2x/background-starry-night-sky-stars-sky-night-silhouette-of-the-mountains-vector.jpg') no-repeat center center/cover;
-}
-.enemy {
-  position: absolute;
-  color: red;
-  font-size: 20px;
-}
-#score, #missed {
-  position: absolute;
-  top: 10px;
-  font-size: 18px;
-}
-#score { left: 10px; }
-#missed { right: 10px; }
-#controls {
-  position: absolute;
-  top: 40px;
-  left: 10px;
-}
-button {
-  margin-right: 5px;
-  padding: 5px 10px;
-}
-#inputBox {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  padding: 10px;
-  font-size: 18px;
-}
-.wish {
-  position: absolute;
-  color: gold;
-  font-size: 40px;
-  animation: floatUp 2s ease-out forwards;
-}
-@keyframes floatUp {
-  0% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-100px); }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CyberForge PC Shop | Pro Invoice System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* ---------- BACKGROUND IMAGE (subtle tech pattern) ---------- */
+        body {
+            min-height: 100vh;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBmaWxsPSIjMjIyMjQwIiBmaWxsLW9wYWNpdHk9IjAuMDMiIGQ9Ik0wIDBoNDB2NDBIMHoiLz48cGF0aCBkPSJNMjAgMjBhMTAgMTAgMCAwIDEgMTAgMTAgMTAgMTAgMCAwIDEtMTAgMTAgMTAgMTAgMCAwIDEtMTAtMTAgMTAgMTAgMCAwIDEgMTAtMTB6IiBmaWxsPSIjMjIyMjQwIiBmaWxsLW9wYWNpdHk9IjAuMDYiLz48L3N2Zz4=') repeat;
+            background-color: #eef2f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main glassmorphic card container */
+        .shop-container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(1px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* ---------- WELCOME BAR (vibrant gradient) ---------- */
+        .welcome-bar {
+            background: linear-gradient(135deg, #0b2b44 0%, #1a4d6b 50%, #0f3b52 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            border-bottom: 3px solid #ffb347;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-text h2 {
+            color: white;
+            font-size: 1.6rem;
+            letter-spacing: -0.3px;
+            font-weight: 600;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+
+        .welcome-text p {
+            color: #ffddb0;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .shop-badge {
+            background: rgba(255,255,240,0.2);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: #ffdd99;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,180,80,0.6);
+        }
+
+        /* 2 column layout */
+        .invoice-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 2rem 2rem 2rem 2rem;
+        }
+
+        /* LEFT: product selection */
+        .selection-area {
+            flex: 1.2;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(2px);
+        }
+
+        .selection-area h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c4a, #2c5a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            border-left: 5px solid #ff8c42;
+            padding-left: 1rem;
+        }
+
+        .item-selector {
+            margin: 1.5rem 0;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 1.8rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: 0.1s;
+        }
+
+        .item-row label {
+            flex: 2;
+            font-weight: 600;
+            color: #1f3e48;
+        }
+
+        .item-row select {
+            flex: 3;
+            padding: 10px 12px;
+            border-radius: 40px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .item-row input {
+            flex: 1.5;
+            padding: 10px 8px;
+            border-radius: 40px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .add-item-btn {
+            background: #1f6392;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 6px;
+        }
+
+        .add-item-btn:hover {
+            background: #0f4b6e;
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* product list quick view */
+        .product-list-preview {
+            margin-top: 20px;
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+        }
+
+        .product-list-preview p {
+            font-size: 0.8rem;
+            color: #2d4a5c;
+            font-weight: 500;
+        }
+
+        /* RIGHT: Invoice card */
+        .invoice-area {
+            flex: 1.5;
+            min-width: 380px;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .invoice-header {
+            background: #1f2e3a;
+            color: white;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .invoice-header h2 {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .invoice-date {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .invoice-body {
+            padding: 1.5rem 1.8rem;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .invoice-table th, .invoice-table td {
+            text-align: left;
+            padding: 12px 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .invoice-table th {
+            color: #2c5a6e;
+            font-weight: 700;
+        }
+
+        .total-row {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 800;
+            border-top: 2px dashed #ccc;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 2rem;
+            padding: 0 1.8rem 1.8rem 1.8rem;
+        }
+
+        .btn-primary {
+            background: #2c7a47;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-print {
+            background: #2c3e66;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+        }
+
+        .empty-invoice {
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .remove-item {
+            background: #fee2e2;
+            border: none;
+            border-radius: 40px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #b91c1c;
+        }
+
+        .remove-item:hover {
+            background: #fecaca;
+        }
+
+        @media (max-width: 850px) {
+            .invoice-panel {
+                flex-direction: column;
+            }
+            .welcome-bar {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="game">
-  <div id="score">Score: 0</div>
-  <div id="missed">Missed: 0 / 5</div>
-  <div id="controls">
-    <button onclick="startGame()">Play</button>
-    <button onclick="pauseGame()">Pause</button>
-    <button onclick="stopGame()">Stop</button>
-  </div>
+
+<div class="shop-container">
+    <!-- WELCOME BAR with stylish design and shop identity -->
+    <div class="welcome-bar">
+        <div class="welcome-text">
+            <h2>⚡ CYBERFORGE PC SHOP ⚡</h2>
+            <p>High performance gear | Gaming | Workstations | Expert support</p>
+        </div>
+        <div class="shop-badge">
+            🛒 GST READY • SINCE 2024
+        </div>
+    </div>
+
+    <div class="invoice-panel">
+        <!-- LEFT SECTION: SELECT LIST ITEM + QUANTITY -->
+        <div class="selection-area">
+            <h3>📦 Add Items to Invoice</h3>
+            <div class="item-selector">
+                <div class="item-row">
+                    <label>🔧 Select Component</label>
+                    <select id="productSelect">
+                        <option value="Gaming Keyboard RGB">🎮 Gaming Keyboard RGB - $45.99</option>
+                        <option value="Wireless Mouse Pro">🖱️ Wireless Mouse Pro - $29.99</option>
+                        <option value="27'' 144Hz Monitor">🖥️ 27" 144Hz Monitor - $189.99</option>
+                        <option value="RTX 4060 Graphics">🎨 RTX 4060 Graphics - $299.99</option>
+                        <option value="1TB NVMe SSD">💾 1TB NVMe SSD - $79.99</option>
+                        <option value="Mechanical Switch Kit">⌨️ Mechanical Switch Kit - $34.50</option>
+                        <option value="Gaming Headset 7.1">🎧 Gaming Headset 7.1 - $59.99</option>
+                    </select>
+                </div>
+                <div class="item-row">
+                    <label>🔢 Quantity</label>
+                    <input type="number" id="itemQuantity" min="1" value="1" step="1">
+                </div>
+                <button class="add-item-btn" id="addToInvoiceBtn">➕ Add to Invoice</button>
+            </div>
+            <div class="product-list-preview">
+                <p>✨ Popular picks: RTX 4060, 144Hz Monitor, NVMe SSD — bulk discounts auto applied?</p>
+                <p>💡 Tip: click 'Create Invoice' to finalize & Print!</p>
+            </div>
+        </div>
+
+        <!-- RIGHT SECTION: INVOICE / BILL DISPLAY -->
+        <div class="invoice-area" id="invoiceCard">
+            <div class="invoice-header">
+                <h2>🧾 TAX INVOICE</h2>
+                <div class="invoice-date" id="invoiceDateDisplay"></div>
+            </div>
+            <div class="invoice-body" id="invoiceBodyContainer">
+                <div class="empty-invoice">
+                    ✨ No items added yet. Select products and quantities above. ✨
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-primary" id="createInvoiceBtn">📄 Create / Update Invoice</button>
+                <button class="btn-primary btn-print" id="printInvoiceBtn">🖨️ Print Invoice</button>
+            </div>
+        </div>
+    </div>
 </div>
-<input id="inputBox" placeholder="Type to shoot..." autofocus />
 
 <script>
-const words = ["attack","defend","laser","enemy","code","javascript","speed","focus","target","fire","credit","department","General","Tech"];
-let enemies = [];
-let score = 0;
-let missed = 0;
-let running = false;
-let spawnInterval, updateInterval;
+    // ---------- ADVANCED INVOICE STATE ----------
+    // Each cart item: { name: string, price: number, quantity: number, total: number }
+    let cartItems = [];
 
-function spawnEnemy() {
-  if (!running) return;
-  const word = Math.random() < 0.1 ? "wish" : words[Math.floor(Math.random() * words.length)];
-  const el = document.createElement("div");
-  el.classList.add("enemy");
-  el.textContent = word;
-  el.style.left = Math.random() * (window.innerWidth - 100) + "px";
-  el.style.top = "0px";
-  document.getElementById("game").appendChild(el);
-
-  enemies.push({ el, word, y: 0 });
-}
-
-function updateEnemies() {
-  if (!running) return;
-  enemies.forEach((enemy, index) => {
-    enemy.y += 0.5;
-    enemy.el.style.top = enemy.y + "px";
-
-    if (enemy.y > window.innerHeight) {
-      enemy.el.remove();
-      enemies.splice(index, 1);
-      missed++;
-      document.getElementById("missed").textContent = "Missed: " + missed + " / 5";
-      if (missed >= 5) {
-        alert("Game Over!");
-        stopGame();
-      }
+    // Helper: get price from product name (based on select option values)
+    function getPriceFromProductName(productName) {
+        // productName is like "Gaming Keyboard RGB" (without price)
+        // but we stored full description in select values. Actually we need mapping.
+        // Better: maintain product database
+        const productMap = {
+            "Gaming Keyboard RGB": 45.99,
+            "Wireless Mouse Pro": 29.99,
+            "27'' 144Hz Monitor": 189.99,
+            "RTX 4060 Graphics": 299.99,
+            "1TB NVMe SSD": 79.99,
+            "Mechanical Switch Kit": 34.50,
+            "Gaming Headset 7.1": 59.99
+        };
+        return productMap[productName] || 0;
     }
-  });
-}
 
-function shoot(word) {
-  enemies.forEach((enemy, index) => {
-    if (enemy.word === word) {
-      enemy.el.remove();
-      enemies.splice(index, 1);
+    // Add item from dropdown & quantity
+    function addItemFromSelection() {
+        const selectElem = document.getElementById('productSelect');
+        const selectedOptionText = selectElem.options[selectElem.selectedIndex].text;
+        // Extracting product name without price suffix e.g., "🎮 Gaming Keyboard RGB - $45.99" -> "Gaming Keyboard RGB"
+        let rawName = selectedOptionText;
+        // remove emoji if present and split by " - " to get clean product name
+        let cleanProduct = rawName.replace(/[^\w\s\'\']/g, '').trim(); // remove extra icons but keep letters
+        // Better extraction: match after icon and before dash
+        const dashSplit = rawName.split(' - ');
+        let productBase = dashSplit[0];
+        // remove leading emoji/spaces
+        productBase = productBase.replace(/[^a-zA-Z0-9\s\'\'']/g, '').trim();
+        // fallback if weird
+        if (!productBase || productBase.length === 0) productBase = "Gaming Keyboard RGB";
 
-      if (word === "wish") {
-        score += 1000;
-        showWishAnimation();
-      } else {
-        score += 10;
-      }
+        const quantityInput = document.getElementById('itemQuantity');
+        let quantity = parseInt(quantityInput.value);
+        if (isNaN(quantity) || quantity < 1) quantity = 1;
 
-      document.getElementById("score").textContent = "Score: " + score;
+        const unitPrice = getPriceFromProductName(productBase);
+        if (unitPrice === 0) {
+            alert("Price not found for product, please refresh.");
+            return;
+        }
+
+        // check if same product already exists in cart? For better UX we allow duplicates but could combine.
+        // I'll implement combining if same product name exists (merge quantity)
+        const existingIndex = cartItems.findIndex(item => item.name === productBase);
+        if (existingIndex !== -1) {
+            cartItems[existingIndex].quantity += quantity;
+            cartItems[existingIndex].total = cartItems[existingIndex].quantity * cartItems[existingIndex].price;
+        } else {
+            cartItems.push({
+                name: productBase,
+                price: unitPrice,
+                quantity: quantity,
+                total: unitPrice * quantity
+            });
+        }
+        // refresh invoice preview after each add (real-time, but we also create/update invoice manually)
+        renderInvoicePreview();  // live update in invoice area
+        // reset quantity to 1 but keep selection
+        quantityInput.value = 1;
     }
-  });
-}
 
-function showWishAnimation() {
-  const wish = document.createElement("div");
-  wish.classList.add("wish");
-  wish.textContent = "+1000 ✨";
-  wish.style.left = "50%";
-  wish.style.top = "50%";
-  document.getElementById("game").appendChild(wish);
+    // Remove single item from cart by index
+    function removeCartItem(index) {
+        if (index >= 0 && index < cartItems.length) {
+            cartItems.splice(index, 1);
+            renderInvoicePreview();
+        }
+    }
 
-  setTimeout(() => wish.remove(), 2000);
-}
+    // Render the invoice body dynamically with full items, totals, tax etc.
+    function renderInvoicePreview() {
+        const invoiceBodyContainer = document.getElementById('invoiceBodyContainer');
+        if (!cartItems.length) {
+            invoiceBodyContainer.innerHTML = `<div class="empty-invoice">🛒 Invoice empty — please add products above 🛒</div>`;
+            return;
+        }
 
-function startGame() {
-  if (running) return;
-  running = true;
-  spawnInterval = setInterval(spawnEnemy, 1500);
-  updateInterval = setInterval(updateEnemies, 20);
-}
+        let subtotal = 0;
+        cartItems.forEach(item => {
+            subtotal += item.total;
+        });
+        const taxRate = 0.08; // 8% GST
+        const taxAmount = subtotal * taxRate;
+        const grandTotal = subtotal + taxAmount;
 
-function pauseGame() {
-  running = false;
-}
+        // Build table
+        let tableHTML = `
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        cartItems.forEach((item, idx) => {
+            tableHTML += `
+                <tr>
+                    <td><strong>${escapeHtml(item.name)}</strong></td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.total.toFixed(2)}</td>
+                    <td><button class="remove-item" data-index="${idx}">🗑️</button></td>
+                </tr>
+            `;
+        });
+        tableHTML += `
+                </tbody>
+            </table>
+            <div style="margin-top: 1rem; text-align: right; background: #f9f9fb; padding: 1rem; border-radius: 1rem;">
+                <div>Subtotal: <strong>$${subtotal.toFixed(2)}</strong></div>
+                <div>Tax (8% GST): <strong>$${taxAmount.toFixed(2)}</strong></div>
+                <div class="total-row" style="border-top: none; font-size: 1.5rem;">GRAND TOTAL: $${grandTotal.toFixed(2)}</div>
+                <div style="font-size: 0.7rem; color: #4b5563;">*Invoice includes applicable taxes</div>
+            </div>
+        `;
+        invoiceBodyContainer.innerHTML = tableHTML;
 
-function stopGame() {
-  running = false;
-  clearInterval(spawnInterval);
-  clearInterval(updateInterval);
-  enemies.forEach(e => e.el.remove());
-  enemies = [];
-  score = 0;
-  missed = 0;
-  document.getElementById("score").textContent = "Score: 0";
-  document.getElementById("missed").textContent = "Missed: 0 / 5";
-}
+        // attach remove event listeners dynamically
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                if (!isNaN(idx)) removeCartItem(idx);
+            });
+        });
+    }
 
-const input = document.getElementById("inputBox");
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    shoot(input.value.trim());
-    input.value = "";
-  }
-});
+    // helper to prevent XSS
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // update invoice date and final creation (just re-renders with same data, but ensures print friendly)
+    function updateInvoiceAndFinalize() {
+        if (cartItems.length === 0) {
+            alert("❌ No items in invoice. Please add products before creating invoice.");
+            return false;
+        }
+        renderInvoicePreview();   // ensures fresh data and totals
+        // set current date in invoice header
+        const now = new Date();
+        const formattedDate = now.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' });
+        const dateSpan = document.getElementById('invoiceDateDisplay');
+        if (dateSpan) dateSpan.innerText = `📅 ${formattedDate}`;
+        // scroll to invoice for visibility
+        document.getElementById('invoiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return true;
+    }
+
+    // PRINT INVOICE: Advanced print feature with background image and styling
+    function printInvoice() {
+        if (cartItems.length === 0) {
+            alert("No items to print. Please add products and create invoice.");
+            return;
+        }
+
+        // ensure invoice is up-to-date with latest date and content
+        updateInvoiceAndFinalize();
+
+        // grab current invoice HTML content + header + background style
+        const originalTitle = document.title;
+        document.title = "CyberForge Invoice";
+
+        // Get current invoice card content but preserve full layout for print
+        const invoiceCardElement = document.getElementById('invoiceCard');
+        // clone invoice area deeply to avoid modifications
+        const cloneInvoice = invoiceCardElement.cloneNode(true);
+        // we also need to capture the welcome bar and the shop identity
+        const welcomeClone = document.querySelector('.welcome-bar').cloneNode(true);
+        // Build a fresh print window content
+        const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=yes,scrollbars=yes');
+        if (!printWindow) {
+            alert("Please allow pop-ups to print invoice.");
+            return;
+        }
+
+        // style that includes background image (original body background + clean print)
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>CyberForge PC Shop - Official Invoice</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+                    }
+                    body {
+                        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBmaWxsPSIjMjIyMjQwIiBmaWxsLW9wYWNpdHk9IjAuMDMiIGQ9Ik0wIDBoNDB2NDBIMHoiLz48cGF0aCBkPSJNMjAgMjBhMTAgMTAgMCAwIDEgMTAgMTAgMTAgMTAgMCAwIDEtMTAgMTAgMTAgMTAgMCAwIDEtMTAtMTAgMTAgMTAgMCAwIDEgMTAtMTB6IiBmaWxsPSIjMjIyMjQwIiBmaWxsLW9wYWNpdHk9IjAuMDYiLz48L3N2Zz4=') repeat;
+                        background-color: #f1f5f9;
+                        padding: 2rem;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .print-container {
+                        max-width: 1000px;
+                        width: 100%;
+                        margin: 0 auto;
+                        background: white;
+                        border-radius: 1.8rem;
+                        box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+                        overflow: hidden;
+                    }
+                    .welcome-bar-print {
+                        background: linear-gradient(135deg, #0b2b44, #1a4d6b);
+                        padding: 1rem 2rem;
+                        color: white;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        border-bottom: 3px solid #ffb347;
+                    }
+                    .welcome-bar-print h2 { font-size: 1.6rem; }
+                    .invoice-card-print {
+                        padding: 1.5rem;
+                    }
+                    .invoice-header-print {
+                        display: flex;
+                        justify-content: space-between;
+                        border-bottom: 2px solid #e2e8f0;
+                        margin-bottom: 1.2rem;
+                        padding-bottom: 0.8rem;
+                    }
+                    .invoice-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 1rem 0;
+                    }
+                    .invoice-table th, .invoice-table td {
+                        border-bottom: 1px solid #cbd5e1;
+                        padding: 10px 6px;
+                        text-align: left;
+                    }
+                    .total-section {
+                        text-align: right;
+                        margin-top: 1rem;
+                        padding: 1rem;
+                        background: #f8fafc;
+                        border-radius: 1rem;
+                    }
+                    .print-footer {
+                        text-align: center;
+                        font-size: 0.7rem;
+                        color: #4b5563;
+                        margin-top: 2rem;
+                        border-top: 1px solid #ddd;
+                        padding-top: 1rem;
+                    }
+                    button { display: none; }
+                    .remove-item { display: none; }
+                    @media print {
+                        body { margin: 0; padding: 0; background: white; }
+                        .print-container { box-shadow: none; margin: 0; }
+                        .no-print { display: none; }
+                        .remove-item { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="print-container">
+                    <div class="welcome-bar-print">
+                        <div><h2>⚡ CYBERFORGE PC SHOP ⚡</h2><p>Gaming & Workstation Experts</p></div>
+                        <div>🔧 Invoice #INV-${Math.floor(Math.random() * 10000)}</div>
+                    </div>
+                    <div class="invoice-card-print">
+                        <div class="invoice-header-print">
+                            <strong>Tax Invoice (Bill)</strong>
+                            <span>${new Date().toLocaleString()}</span>
+                        </div>
+                        ${document.getElementById('invoiceBodyContainer').innerHTML}
+                        <div class="print-footer">
+                            Thank you for shopping at CyberForge! | Support: support@cyberforge.com | Returns within 7 days
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    window.onload = function() { window.print(); setTimeout(() => window.close(), 800); };
+                <\/script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        document.title = originalTitle;
+    }
+
+    // Event listeners + initial date display
+    document.addEventListener('DOMContentLoaded', () => {
+        // set today date in invoice header preview
+        const now = new Date();
+        document.getElementById('invoiceDateDisplay').innerText = `📅 ${now.toLocaleString()}`;
+        // add item listener
+        document.getElementById('addToInvoiceBtn').addEventListener('click', addItemFromSelection);
+        document.getElementById('createInvoiceBtn').addEventListener('click', () => {
+            updateInvoiceAndFinalize();
+        });
+        document.getElementById('printInvoiceBtn').addEventListener('click', () => {
+            if(cartItems.length === 0) {
+                alert("Invoice is empty. Add items and click 'Create / Update Invoice' before printing.");
+                return;
+            }
+            updateInvoiceAndFinalize();   // ensure sync
+            printInvoice();
+        });
+        // initial render
+        renderInvoicePreview();
+    });
 </script>
 </body>
 </html>
+```
