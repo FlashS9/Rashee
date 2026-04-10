@@ -1,4 +1,11 @@
 body {
+  margin: 0;
+  font-family: Arial;
+  background: url('https://laptopcare.lk/wp-content/uploads/2024/08/shopic4-scaled.jpeg') no-repeat center center fixed;
+  background-size: cover;
+}
+.navbar {
+  background: rgba(0,0,0,0.8);
   color: white;
   padding: 15px;
   text-align: center;
@@ -42,4 +49,3 @@ th, td {
   padding: 10px;
   text-align: center;
 }
-
