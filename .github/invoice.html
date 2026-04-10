@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="navbar">Invoice</header>
+
+  <div class="invoice-container" id="invoice"></div>
+
+  <div style="text-align:center; margin-top:20px;">
+    <button onclick="window.print()">Print Invoice</button>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("invoice"));
+    let total = 0;
+
+    let html = `<h2>Invoice</h2><table><tr><th>Item</th><th>Qty</th><th>Price</th></tr>`;
+
+    data.forEach(item => {
+      let subtotal = item.qty * item.price;
+      total += subtotal;
+      html += `<tr><td>${item.name}</td><td>${item.qty}</td><td>$${subtotal}</td></tr>`;
+    });
+
+    html += `</table><h3>Total: $${total}</h3>`;
+
+    document.getElementById("invoice").innerHTML = html;
+  </script>
+</body>
+</html>
