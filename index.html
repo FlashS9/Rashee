@@ -2,54 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABS Computer - Invoice System</title>
+    <title>ABS Computer | Invoice System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="welcome-bar">
-        Welcome to ABS Computer | Rockhampton, Fort Worth, Texas
+        WELCOME TO ABS COMPUTER - ROCKHAMPTON, FORT WORTH, TEXAS
     </div>
 
-    <div class="container">
-        <header>
-            <h1>Generate Official Invoice</h1>
-        </header>
-
-        <section class="invoice-form">
-            <div class="input-group">
-                <label>Select Product</label>
-                <select id="productSelect">
-                    <option value="0" data-price="0">-- Select Item --</option>
-                    <option value="Gaming PC" data-price="1200">High-End Gaming PC</option>
-                    <option value="Office Laptop" data-price="800">Professional Laptop</option>
-                    <option value="Mechanical Keyboard" data-price="150">RGB Mechanical Keyboard</option>
-                    <option value="27 Inch Monitor" data-price="300">4K UHD Monitor</option>
-                </select>
+    <div class="main-bg">
+        <div class="form-container">
+            <h2>Create New Invoice</h2>
+            <div class="input-row">
+                <div class="field">
+                    <label>Product Item</label>
+                    <select id="itemSelect">
+                        <option value="" data-price="0">-- Choose Component --</option>
+                        <option value="GTX 4090 GPU" data-price="1600">GTX 4090 GPU</option>
+                        <option value="Ryzen 9 Processor" data-price="550">Ryzen 9 Processor</option>
+                        <option value="32GB DDR5 RAM" data-price="120">32GB DDR5 RAM</option>
+                        <option value="1TB NVMe SSD" data-price="90">1TB NVMe SSD</option>
+                        <option value="System Diagnostic" data-price="75">System Diagnostic Fee</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Quantity</label>
+                    <input type="number" id="qtyInput" min="1" value="1">
+                </div>
+                <button onclick="addToCart()" class="btn-add">Add Item</button>
             </div>
 
-            <div class="input-group">
-                <label>Quantity</label>
-                <input type="number" id="quantity" min="1" value="1">
-            </div>
+            <table id="previewTable">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
-            <button onclick="addItem()" class="btn-add">Add to List</button>
-        </section>
-
-        <table id="cartTable">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <div class="actions">
-            <button onclick="generateInvoice()" class="btn-submit">Create & Preview Invoice</button>
+            <button onclick="printInvoice()" class="btn-print">Generate & Print Official Invoice</button>
         </div>
     </div>
 
