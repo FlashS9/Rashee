@@ -11,7 +11,7 @@ body, html { margin: 0; font-family: 'Helvetica', Arial, sans-serif; height: 100
 
 .main-bg {
     background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=1470');
+                url('bbb.jpeg');
     background-size: cover;
     height: calc(100vh - 44px);
     display: flex;
