@@ -1,14 +1,20 @@
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Computer Shop</title>
+  <title>AB Computer Shop</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="navbar">Welcome to Computer Shop</header>
+  <header class="navbar">
+    <div class="brand">AB Computer</div>
+    <div class="tagline">Quality Tech Solutions</div>
+  </header>
 
   <div class="container">
-    <h2>Select Products</h2>
+    <h2>Create Invoice</h2>
+
+    <div class="customer">
+      <input type="text" id="customerName" placeholder="Customer Name" required>
+      <input type="text" id="customerContact" placeholder="Contact Number">
+    </div>
 
     <form id="orderForm">
       <div class="product">
