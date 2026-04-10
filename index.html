@@ -1,46 +1,58 @@
+<!DOCTYPE html>
 <html lang="en">
-  <title>AB Computer Shop</title>
-  <link rel="stylesheet" href="styles.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABS Computer - Invoice System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="navbar">
-    <div class="brand">AB Computer</div>
-    <div class="tagline">Quality Tech Solutions</div>
-  </header>
-
-  <div class="container">
-    <h2>Create Invoice</h2>
-
-    <div class="customer">
-      <input type="text" id="customerName" placeholder="Customer Name" required>
-      <input type="text" id="customerContact" placeholder="Contact Number">
+    <div class="welcome-bar">
+        Welcome to ABS Computer | Rockhampton, Fort Worth, Texas
     </div>
 
-    <form id="orderForm">
-      <div class="product">
-        <label>Keyboard ($20)</label>
-        <input type="number" min="0" value="0" id="keyboard">
-      </div>
+    <div class="container">
+        <header>
+            <h1>Generate Official Invoice</h1>
+        </header>
 
-      <div class="product">
-        <label>Mouse ($10)</label>
-        <input type="number" min="0" value="0" id="mouse">
-      </div>
+        <section class="invoice-form">
+            <div class="input-group">
+                <label>Select Product</label>
+                <select id="productSelect">
+                    <option value="0" data-price="0">-- Select Item --</option>
+                    <option value="Gaming PC" data-price="1200">High-End Gaming PC</option>
+                    <option value="Office Laptop" data-price="800">Professional Laptop</option>
+                    <option value="Mechanical Keyboard" data-price="150">RGB Mechanical Keyboard</option>
+                    <option value="27 Inch Monitor" data-price="300">4K UHD Monitor</option>
+                </select>
+            </div>
 
-      <div class="product">
-        <label>Monitor ($150)</label>
-        <input type="number" min="0" value="0" id="monitor">
-      </div>
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity" min="1" value="1">
+            </div>
 
-      <div class="product">
-        <label>USB Drive ($25)</label>
-        <input type="number" min="0" value="0" id="usb">
-      </div>
+            <button onclick="addItem()" class="btn-add">Add to List</button>
+        </section>
 
-      <button type="button" onclick="generateInvoice()">Create Invoice</button>
-    </form>
-  </div>
+        <table id="cartTable">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
-  <script src="script.js"></script>
+        <div class="actions">
+            <button onclick="generateInvoice()" class="btn-submit">Create & Preview Invoice</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
