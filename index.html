@@ -1,53 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ABS Computer | Invoice System</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Shipping Form</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="welcome-bar">
-        WELCOME TO ABS COMPUTER - ROCKHAMPTON, FORT WORTH, TEXAS
+
+<div class="container">
+  <h2>Shipping Form</h2>
+
+  <form id="form">
+    <div class="form-grid">
+      
+      <!-- Sender -->
+      <div class="section">
+        <h3>From</h3>
+        <input type="text" placeholder="Sender Name" id="s_name">
+        <input type="text" placeholder="Address line 1" id="s_addr1">
+        <input type="text" placeholder="Address line 2" id="s_addr2">
+        <input type="text" placeholder="Phone Number 1" id="s_phone1">
+        <input type="text" placeholder="Phone Number 2" id="s_phone2">
+      </div>
+
+      <!-- Receiver -->
+      <div class="section">
+        <h3>To</h3>
+        <input type="text" placeholder="Receiver Name" id="r_name">
+        <input type="text" placeholder="Address line 1" id="r_addr1">
+        <input type="text" placeholder="Address line 2" id="r_addr2">
+        <input type="text" placeholder="Phone Number 1" id="r_phone1">
+        <input type="text" placeholder="Phone Number 2" id="r_phone2">
+      </div>
+
     </div>
 
-    <div class="main-bg">
-        <div class="form-container">
-            <h2>Create New Invoice</h2>
-            <div class="input-row">
-                <div class="field">
-                    <label>Product Item</label>
-                    <select id="itemSelect">
-                        <option value="" data-price="0">-- Choose Component --</option>
-                        <option value="GTX 4090 GPU" data-price="1600">GTX 4090 GPU</option>
-                        <option value="Ryzen 9 Processor" data-price="550">Ryzen 9 Processor</option>
-                        <option value="32GB DDR5 RAM" data-price="120">32GB DDR5 RAM</option>
-                        <option value="1TB NVMe SSD" data-price="90">1TB NVMe SSD</option>
-                        <option value="System Diagnostic" data-price="75">System Diagnostic Fee</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Quantity</label>
-                    <input type="number" id="qtyInput" min="1" value="1">
-                </div>
-                <button onclick="addToCart()" class="btn-add">Add Item</button>
-            </div>
+    <button type="button" onclick="generatePrint()">Print</button>
+  </form>
 
-            <table id="previewTable">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+  <!-- Printable Area -->
+  <div id="printArea" class="print-area"></div>
+</div>
 
-            <button onclick="printInvoice()" class="btn-print">Generate & Print Official Invoice</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
