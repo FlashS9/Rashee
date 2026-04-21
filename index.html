@@ -1,47 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shipping Form</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Label Generator</title>
+    <link rel="stylesheet" href="C:\Users\ADMIN\Desktop\web\style.css">
 </head>
 <body>
 
-<div class="container">
-  <h2>Shipping Form</h2>
+    <div class="no-print container">
+        <h1>Label Generator</h1>
+        <form id="labelForm">
+            <div class="form-section">
+                <h3>From (Sender)</h3>
+                <input type="text" id="sName" placeholder="Sender Name" required>
+                <input type="text" id="sAddr1" placeholder="Address Line 1" required>
+                <input type="text" id="sAddr2" placeholder="Address Line 2">
+                <input type="text" id="sPhone1" placeholder="Phone Number 1" required>
+                <input type="text" id="sPhone2" placeholder="Phone Number 2">
+            </div>
 
-  <form id="form">
-    <div class="form-grid">
-      
-      <!-- Sender -->
-      <div class="section">
-        <h3>From</h3>
-        <input type="text" placeholder="Sender Name" id="s_name">
-        <input type="text" placeholder="Address line 1" id="s_addr1">
-        <input type="text" placeholder="Address line 2" id="s_addr2">
-        <input type="text" placeholder="Phone Number 1" id="s_phone1">
-        <input type="text" placeholder="Phone Number 2" id="s_phone2">
-      </div>
+            <div class="form-section">
+                <h3>To (Recipient)</h3>
+                <input type="text" id="rName" placeholder="Receiver Name" required>
+                <input type="text" id="rAddr1" placeholder="Address Line 1" required>
+                <input type="text" id="rAddr2" placeholder="Address Line 2">
+                <input type="text" id="rPhone1" placeholder="Phone Number 1" required>
+                <input type="text" id="rPhone2" placeholder="Phone Number 2">
+            </div>
 
-      <!-- Receiver -->
-      <div class="section">
-        <h3>To</h3>
-        <input type="text" placeholder="Receiver Name" id="r_name">
-        <input type="text" placeholder="Address line 1" id="r_addr1">
-        <input type="text" placeholder="Address line 2" id="r_addr2">
-        <input type="text" placeholder="Phone Number 1" id="r_phone1">
-        <input type="text" placeholder="Phone Number 2" id="r_phone2">
-      </div>
+            <div class="form-section">
+                <h3>Additional Details</h3>
+                <input type="text" id="details" placeholder="Package details, weight, or notes...">
+            </div>
 
+            <button type="button" onclick="window.print()">Print Label</button>
+        </form>
     </div>
 
-    <button type="button" onclick="generatePrint()">Print</button>
-  </form>
+    <div id="label-page">
+        <div class="label-border">
+            <div class="label-content">
+                <div class="column">
+                    <h2>From</h2>
+                    <hr>
+                    <div class="info">
+                        <p id="p-sName" class="name-bold">Sender Name</p>
+                        <p id="p-sAddr1">Address line 1</p>
+                        <p id="p-sAddr2">Address line 2</p>
+                        <br>
+                        <p id="p-sPhone1">Phone Number 1</p>
+                        <p id="p-sPhone2">Phone Number 2</p>
+                    </div>
+                </div>
 
-  <!-- Printable Area -->
-  <div id="printArea" class="print-area"></div>
-</div>
+                <div class="vertical-divider"></div>
 
-<script src="script.js"></script>
+                <div class="column">
+                    <h2>To</h2>
+                    <hr>
+                    <div class="info">
+                        <p id="p-rName" class="name-bold">Receiver Name</p>
+                        <p id="p-rAddr1">Address line 1</p>
+                        <p id="p-rAddr2">Address line 2</p>
+                        <br>
+                        <p id="p-rPhone1">Phone Number 1</p>
+                        <p id="p-rPhone2">Phone Number 2</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-box">
+                <p id="p-details"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="C:\Users\ADMIN\Desktop\web\script.js"></script>
 </body>
 </html>
