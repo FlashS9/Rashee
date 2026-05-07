@@ -17,10 +17,10 @@
 <body>
 
     <div id="auth-ui" class="box">
-        <h2>ආයුබෝවන්</h2>
-        <p>ඇතුළු වන්න හෝ ලියාපදිංචි වන්න</p>
-        <input type="email" id="email" placeholder="ඊමේල් ලිපිනය">
-        <input type="password" id="password" placeholder="මුරපදය">
+        <h2>Wellcome Smart Mobile Shop</h2>
+        <p>Sign up Login</p>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
         <button onclick="signIn()">Login</button>
         <button onclick="signUp()" style="background:#666;">Register</button>
     </div>
@@ -44,11 +44,11 @@
         async function signUp() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            if(!email || !password) return alert("කරුණාකර සියල්ල පුරවන්න");
+            if(!email || !password) return alert("Fill All");
 
             const { error } = await sbClient.auth.signUp({ email, password });
             if (error) alert("වැරද්දක්: " + error.message);
-            else alert("ලියාපදිංචිය සාර්ථකයි! දැන් Login වෙන්න.");
+            else alert("Registration successful! Now Login..");
         }
 
         // 3. Login වීමේ ශ්‍රිතය
@@ -83,7 +83,7 @@
                 listDiv.innerHTML += `
                     <div class="item-card">
                         <strong>${item.name}</strong>
-                        <p>ඉතිරි ප්‍රමාණය: ${item.stock}</p>
+                        <p>Available: ${item.stock}</p>
                         <button onclick="buyItem(${item.id}, ${item.stock})">මිලදී ගන්න</button>
                     </div>
                 `;
@@ -92,7 +92,7 @@
 
         // 5. තොග ප්‍රමාණය අඩු කිරීම (Update)
         async function buyItem(id, currentStock) {
-            if(currentStock <= 0) return alert("මෙම භාණ්ඩය අවසන්!");
+            if(currentStock <= 0) return alert("Sold Out");
 
             const { error } = await sbClient
                 .from('products')
