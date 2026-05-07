@@ -26,7 +26,7 @@
     </div>
 
     <div id="shop-ui" class="box" style="display:none;">
-        <h2>බඩු ලැයිස්තුව</h2>
+        <h2>Item List</h2>
         <div id="item-list"></div>
         <hr>
         <button onclick="signOut()" style="background: #ff4444;">Logout</button>
@@ -59,7 +59,7 @@
             const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
             
             if (error) {
-                alert("Login අසාර්ථකයි: " + error.message);
+                alert("Login SuccessFull: " + error.message);
             } else {
                 document.getElementById('auth-ui').style.display = 'none';
                 document.getElementById('shop-ui').style.display = 'block';
