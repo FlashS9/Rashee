@@ -1,80 +1,92 @@
+rckgjyrzgnbrreslchaq
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery Label Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>My Supabase Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <div class="no-print container">
-        <h1>Label Generator</h1>
-        <form id="labelForm">
-            <div class="form-section">
-                <h3>From (Sender)</h3>
-                <input type="text" id="sName" placeholder="Sender Name" required>
-                <input type="text" id="sAddr1" placeholder="Address Line 1" required>
-                <input type="text" id="sAddr2" placeholder="Address Line 2">
-                <input type="text" id="sPhone1" placeholder="Phone Number 1" required>
-                <input type="text" id="sPhone2" placeholder="Phone Number 2">
-            </div>
-
-            <div class="form-section">
-                <h3>To (Recipient)</h3>
-                <input type="text" id="rName" placeholder="Receiver Name" required>
-                <input type="text" id="rAddr1" placeholder="Address Line 1" required>
-                <input type="text" id="rAddr2" placeholder="Address Line 2">
-                <input type="text" id="rPhone1" placeholder="Phone Number 1" required>
-                <input type="text" id="rPhone2" placeholder="Phone Number 2">
-            </div>
-
-            <div class="form-section">
-                <h3>Additional Details</h3>
-                <input type="text" id="details" placeholder="Package details, weight, or notes...">
-            </div>
-
-            <button type="button" onclick="window.print()">Print Label</button>
-        </form>
+    <div id="auth-ui">
+        <h2>ඇතුළු වන්න (Login / Register)</h2>
+        <input type="email" id="email" placeholder="ඊමේල් ලිපිනය"><br><br>
+        <input type="password" id="password" placeholder="මුරපදය"><br><br>
+        <button onclick="signUp()">Register</button>
+        <button onclick="signIn()">Login</button>
     </div>
 
-    <div id="label-page">
-        <div class="label-border">
-            <div class="label-content">
-                <div class="column">
-                    <h2>From</h2>
-                    <hr>
-                    <div class="info">
-                        <p id="p-sName" class="name-bold">Sender Name</p>
-                        <p id="p-sAddr1">Address line 1</p>
-                        <p id="p-sAddr2">Address line 2</p>
-                        <br>
-                        <p id="p-sPhone1">Phone Number 1</p>
-                        <p id="p-sPhone2">Phone Number 2</p>
-                    </div>
-                </div>
-
-                <div class="vertical-divider"></div>
-
-                <div class="column">
-                    <h2>To</h2>
-                    <hr>
-                    <div class="info">
-                        <p id="p-rName" class="name-bold">Receiver Name</p>
-                        <p id="p-rAddr1">Address line 1</p>
-                        <p id="p-rAddr2">Address line 2</p>
-                        <br>
-                        <p id="p-rPhone1">Phone Number 1</p>
-                        <p id="p-rPhone2">Phone Number 2</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bottom-box">
-                <p id="p-details"></p>
-            </div>
-        </div>
+    <div id="shop-ui" style="display:none;">
+        <h2>අපේ බඩු ලැයිස්තුව</h2>
+        <div id="item-list"></div>
+        <br>
+        <button onclick="signOut()">Logout</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // පියවර 4 හි කොපි කරගත් විස්තර මෙතැනට දාන්න
+        const SB_URL = "rckgjyrzgnbrreslchaq";
+        const SB_KEY = "rckgjyrzgnbrreslchaq";
+        const supabase = supabase.createClient(SB_URL, SB_KEY);
+
+        // 1. Register වීම
+        async function signUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await supabase.auth.signUp({ email, password });
+            if (error) alert(error.message);
+            else alert("ලියාපදිංචිය සාර්ථකයි! දැන් Login වෙන්න.");
+        }
+
+        // 2. Login වීම
+        async function signIn() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert(error.message);
+            else {
+                document.getElementById('auth-ui').style.display = 'none';
+                document.getElementById('shop-ui').style.display = 'block';
+                fetchItems(); // බඩු ලැයිස්තුව පෙන්වන්න
+            }
+        }
+
+        // 3. බඩු ලැයිස්තුව පෙන්වීම
+        async function fetchItems() {
+            const { data: products, error } = await supabase.from('products').select('*');
+            const listDiv = document.getElementById('item-list');
+            listDiv.innerHTML = "";
+            
+            products.forEach(item => {
+                listDiv.innerHTML += `
+                    <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                        <h3>${item.name}</h3>
+                        <p>ඉතිරි ප්‍රමාණය: ${item.stock}</p>
+                        <button onclick="buyItem(${item.id}, ${item.stock})">මිලදී ගන්න (Buy)</button>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. බඩුවක් ගත් විට Stock එක අඩු කිරීම
+        async function buyItem(id, currentStock) {
+            if(currentStock <= 0) return alert("බඩු ඉවරයි!");
+
+            const { error } = await supabase
+                .from('products')
+                .update({ stock: currentStock - 1 })
+                .eq('id', id);
+
+            if (error) alert("Error: " + error.message);
+            else fetchItems(); // නැවත අලුත් ප්‍රමාණයන් පෙන්වන්න
+        }
+
+        // 5. Logout වීම
+        async function signOut() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+    </script>
 </body>
 </html>
